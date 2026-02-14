@@ -49,6 +49,16 @@ struct ContentView: View {
                 : cornerRadiusInsets.closed.top
     }
 
+    // Computed property to check if current player is YouTube Music
+    private var isYouTubeMusicPlaying: Bool {
+        return musicManager.bundleIdentifier == "com.github.th-ch.youtube-music"
+    }
+    
+    // Computed property for thumbnail aspect ratio
+    private var thumbnailAspectRatio: CGFloat {
+        return isYouTubeMusicPlaying ? 16.0 / 9.0 : 1.0
+    }
+
     private var currentNotchShape: NotchShape {
         NotchShape(
             topCornerRadius: topCornerRadius,
@@ -69,7 +79,9 @@ struct ContentView: View {
             && vm.notchState == .closed && (musicManager.isPlaying || !musicManager.isPlayerIdle)
             && coordinator.musicLiveActivityEnabled && !vm.hideOnClosed
         {
-            chinWidth += (2 * max(0, vm.effectiveClosedNotchHeight - 12) + 20)
+            let closedHeight = max(0, vm.effectiveClosedNotchHeight - 12)
+            let closedWidth = closedHeight * thumbnailAspectRatio
+            chinWidth += (2 * closedWidth + 20)
         } else if !coordinator.expandingView.show && vm.notchState == .closed
             && (!musicManager.isPlaying && musicManager.isPlayerIdle) && Defaults[.showNotHumanFace]
             && !vm.hideOnClosed
@@ -385,6 +397,9 @@ struct ContentView: View {
 
     @ViewBuilder
     func MusicLiveActivity() -> some View {
+        let closedHeight = max(0, vm.effectiveClosedNotchHeight - 12)
+        let closedWidth = closedHeight * thumbnailAspectRatio
+        
         HStack {
             Image(nsImage: musicManager.albumArt)
                 .resizable()
@@ -394,9 +409,10 @@ struct ContentView: View {
                         cornerRadius: MusicPlayerImageSizes.cornerRadiusInset.closed)
                 )
                 .matchedGeometryEffect(id: "albumArt", in: albumArtNamespace)
+                .aspectRatio(thumbnailAspectRatio, contentMode: .fit)
                 .frame(
-                    width: max(0, vm.effectiveClosedNotchHeight - 12),
-                    height: max(0, vm.effectiveClosedNotchHeight - 12)
+                    width: closedWidth,
+                    height: closedHeight
                 )
 
             Rectangle()
@@ -468,12 +484,12 @@ struct ContentView: View {
             .frame(
                 width: max(
                     0,
-                    vm.effectiveClosedNotchHeight - 12
+                    closedWidth
                         + gestureProgress / 2
                 ),
                 height: max(
                     0,
-                    vm.effectiveClosedNotchHeight - 12
+                    closedHeight
                 ),
                 alignment: .center
             )

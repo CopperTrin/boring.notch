@@ -28,6 +28,16 @@ struct AlbumArtView: View {
     @ObservedObject var musicManager = MusicManager.shared
     @ObservedObject var vm: BoringViewModel
     let albumArtNamespace: Namespace.ID
+    
+    // Computed property to check if current player is YouTube Music
+    private var isYouTubeMusic: Bool {
+        return musicManager.bundleIdentifier == "com.github.th-ch.youtube-music"
+    }
+    
+    // Aspect ratio based on player type
+    private var aspectRatio: CGFloat {
+        return isYouTubeMusic ? 16.0 / 9.0 : 1.0
+    }
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -48,7 +58,7 @@ struct AlbumArtView: View {
                         ? MusicPlayerImageSizes.cornerRadiusInset.opened
                         : MusicPlayerImageSizes.cornerRadiusInset.closed)
             )
-            .aspectRatio(1, contentMode: .fit)
+            .aspectRatio(aspectRatio, contentMode: .fit)
             .scaleEffect(x: 1.3, y: 1.4)
             .rotationEffect(.degrees(92))
             .blur(radius: 40)
@@ -74,7 +84,7 @@ struct AlbumArtView: View {
 
     private var albumArtDarkOverlay: some View {
         Rectangle()
-            .aspectRatio(1, contentMode: .fit)
+            .aspectRatio(aspectRatio, contentMode: .fit)
             .foregroundColor(Color.black)
             .opacity(musicManager.isPlaying ? 0 : 0.8)
             .blur(radius: 50)
@@ -84,7 +94,7 @@ struct AlbumArtView: View {
     private var albumArtImage: some View {
         Image(nsImage: musicManager.albumArt)
             .resizable()
-            .aspectRatio(1, contentMode: .fit)
+            .aspectRatio(aspectRatio, contentMode: .fit)
             .matchedGeometryEffect(id: "albumArt", in: albumArtNamespace)
             .clipped()
             .clipShape(
