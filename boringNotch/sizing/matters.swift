@@ -20,6 +20,13 @@ let cornerRadiusInsets: (opened: (top: CGFloat, bottom: CGFloat), closed: (top: 
 enum MusicPlayerImageSizes {
     static let cornerRadiusInset: (opened: CGFloat, closed: CGFloat) = (opened: 13.0, closed: 4.0)
     static let size = (opened: CGSize(width: 90, height: 90), closed: CGSize(width: 20, height: 20))
+    
+    // Bundle identifier constants
+    static let youtubeMusicBundleIdentifier = "com.github.th-ch.youtube-music"
+    
+    // Aspect ratios for different media players
+    static let squareAspectRatio: CGFloat = 1.0
+    static let youtubeMusicAspectRatio: CGFloat = 16.0 / 9.0
 }
 
 @MainActor func getScreenFrame(_ screenUUID: String? = nil) -> CGRect? {
