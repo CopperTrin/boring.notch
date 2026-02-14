@@ -31,12 +31,12 @@ struct AlbumArtView: View {
     
     // Computed property to check if current player is YouTube Music
     private var isYouTubeMusic: Bool {
-        return musicManager.bundleIdentifier == "com.github.th-ch.youtube-music"
+        return musicManager.bundleIdentifier == MusicPlayerImageSizes.youtubeMusicBundleIdentifier
     }
     
     // Aspect ratio based on player type
     private var aspectRatio: CGFloat {
-        return isYouTubeMusic ? 16.0 / 9.0 : 1.0
+        return isYouTubeMusic ? MusicPlayerImageSizes.youtubeMusicAspectRatio : MusicPlayerImageSizes.squareAspectRatio
     }
 
     var body: some View {

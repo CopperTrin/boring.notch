@@ -51,12 +51,12 @@ struct ContentView: View {
 
     // Computed property to check if current player is YouTube Music
     private var isYouTubeMusicPlaying: Bool {
-        return musicManager.bundleIdentifier == "com.github.th-ch.youtube-music"
+        return musicManager.bundleIdentifier == MusicPlayerImageSizes.youtubeMusicBundleIdentifier
     }
     
     // Computed property for thumbnail aspect ratio
     private var thumbnailAspectRatio: CGFloat {
-        return isYouTubeMusicPlaying ? 16.0 / 9.0 : 1.0
+        return isYouTubeMusicPlaying ? MusicPlayerImageSizes.youtubeMusicAspectRatio : MusicPlayerImageSizes.squareAspectRatio
     }
 
     private var currentNotchShape: NotchShape {
