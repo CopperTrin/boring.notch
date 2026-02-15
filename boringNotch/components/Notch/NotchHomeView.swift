@@ -29,14 +29,10 @@ struct AlbumArtView: View {
     @ObservedObject var vm: BoringViewModel
     let albumArtNamespace: Namespace.ID
     
-    // Computed property to check if current player is YouTube Music
-    private var isYouTubeMusic: Bool {
-        return musicManager.bundleIdentifier == MusicPlayerImageSizes.youtubeMusicBundleIdentifier
-    }
-    
-    // Aspect ratio based on player type
+    // Aspect ratio based on actual image dimensions
+    // Detects widescreen thumbnails (e.g. YouTube video) from image width/height
     private var aspectRatio: CGFloat {
-        return isYouTubeMusic ? MusicPlayerImageSizes.youtubeMusicAspectRatio : MusicPlayerImageSizes.squareAspectRatio
+        return MusicPlayerImageSizes.aspectRatio(for: musicManager.albumArt)
     }
 
     var body: some View {

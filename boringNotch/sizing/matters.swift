@@ -27,6 +27,20 @@ enum MusicPlayerImageSizes {
     // Aspect ratios for different media players
     static let squareAspectRatio: CGFloat = 1.0
     static let youtubeMusicAspectRatio: CGFloat = 16.0 / 9.0
+    
+    // Threshold to detect wide (e.g. 16:9) thumbnails from their actual image dimensions.
+    // Images with width/height ratio above this are treated as widescreen (YouTube video thumbnails).
+    static let wideAspectRatioThreshold: CGFloat = 1.3
+    
+    /// Returns the appropriate aspect ratio for the given artwork image.
+    /// If the image is significantly wider than square (e.g. a YouTube video thumbnail),
+    /// the 16:9 ratio is used. Otherwise falls back to 1:1.
+    static func aspectRatio(for image: NSImage) -> CGFloat {
+        let size = image.size
+        guard size.height > 0 else { return squareAspectRatio }
+        let ratio = size.width / size.height
+        return ratio >= wideAspectRatioThreshold ? youtubeMusicAspectRatio : squareAspectRatio
+    }
 }
 
 @MainActor func getScreenFrame(_ screenUUID: String? = nil) -> CGRect? {
